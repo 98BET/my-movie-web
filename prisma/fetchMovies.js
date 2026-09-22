@@ -1,5 +1,3 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
 
 // 🔑 API Key TMDB ของคุณ
 const TMDB_API_KEY = '6ecc8215449fe66713f654cdb1330712'; 
