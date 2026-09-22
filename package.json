@@ -1,0 +1,38 @@
+{
+  "name": "my-movie-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@prisma/adapter-neon": "^7.10.0",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "axios": "^1.20.0",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.4.2",
+    "https-proxy-agent": "^9.1.0",
+    "next": "16.3.1",
+    "pg": "^8.23.0",
+    "proxy-chain": "^3.0.0",
+    "puppeteer": "^25.9.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/ws": "^8.18.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.1",
+    "prisma": "^7.9.1",
+    "tailwindcss": "^4"
+  }
+}

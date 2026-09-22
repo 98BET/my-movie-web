@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Model สำหรับจัดการป้ายโฆษณา Ads
+model Advertisement {
+  id        String   @id @default(uuid())
+  title     String
+  imageUrl  String
+  targetUrl String
+  position  Position @default(TOP_BANNER)
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Position {
+  TOP_BANNER
+  SIDEBAR
+  ABOVE_PLAYER
+  BELOW_PLAYER
+  POPUP
+}
+
+// Model สำหรับหมวดหมู่หนัง
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  movies    Movie[]
+  createdAt DateTime @default(now())
+}
+
+// Model สำหรับตัวหนัง
+model Movie {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  description     String?  @db.Text
+  posterUrl       String
+  bannerUrl       String?
+  embedUrl        String   // ลิ้งก์ Embed/HLS เครื่องเล่นหนัง
+  rating          Float    @default(0.0)
+  year            Int
+  isRecommended Boolean  @default(false)
+  views           Int      @default(0) // เพิ่มฟิลด์นี้นับยอดวิว (เริ่มต้นที่ 0)
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+  @@index([views]) // ช่วยให้คิวรีจัดอันดับหนังยอดฮิตได้รวดเร็วขึ้น
+}

@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0b0d;
+  --foreground: #f3f4f6;
+  --gold-primary: #eab308;
+  --gold-glow: rgba(234, 179, 8, 0.15);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-prompt), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar สไตล์พรีเมียม กลมกลืนกับธีมดาร์กโกลด์ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0b0d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eab308;
+}
+
+/* สีเวลาไฮไลต์ข้อความ (Selection) ให้ตัดกับธีมทอง */
+::selection {
+  background-color: #eab308;
+  color: #000000;
+}
+
+/* คลาสเสริมสำหรับเอฟเฟกต์เรืองแสงทองอ่อนๆ */
+.gold-glow {
+  box-shadow: 0 0 25px rgba(234, 179, 8, 0.2);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 15px rgba(234, 179, 8, 0.4);
+}
