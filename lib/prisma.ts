@@ -1,14 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import { neonConfig } from "@neondatabase/serverless";
-import ws from "ws";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-neonConfig.webSocketConstructor = ws;
-neonConfig.useSecureWebSocket = true;
-neonConfig.pipelineConnect = false;
+function connectionString() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is not set");
+  }
 
-// ใช้ process.env.DATABASE_URL ตามที่ตั้งค่าไว้ใน Coolify
-const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL });
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.delete("channel_binding");
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
+const adapter = new PrismaPg({ connectionString: connectionString() });
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 

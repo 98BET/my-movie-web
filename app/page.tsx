@@ -42,28 +42,37 @@ export default async function Home({ searchParams }: PageProps) {
     whereClause.categoryId = selectedCategory;
   }
 
-  // ดึงข้อมูลหมวดหมู่ทั้งหมด, หนังตามเงื่อนไข, จำนวนหนัง, และข้อมูล Hero/Popular
-  const [categories, movies, totalMovies, heroMovie, popularMovies] = await Promise.all([
-    prisma.category.findMany(),
-    prisma.movie.findMany({
-      where: whereClause,
-      include: { category: true },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.movie.count({ where: whereClause }),
-    page === 1 && !query && !selectedCategory 
-      ? prisma.movie.findFirst({ orderBy: { createdAt: "desc" } }) 
-      : null,
-    page === 1 && !query && !selectedCategory
-      ? prisma.movie.findMany({
-          orderBy: { views: "desc" },
-          take: 5,
-          include: { category: true },
-        })
-      : Promise.resolve([]),
-  ]);
+  let categories: Category[] = [];
+  let movies: Movie[] = [];
+  let totalMovies = 0;
+  let heroMovie: Movie | null = null;
+  let popularMovies: Movie[] = [];
+
+  try {
+    [categories, movies, totalMovies, heroMovie, popularMovies] = await Promise.all([
+      prisma.category.findMany(),
+      prisma.movie.findMany({
+        where: whereClause,
+        include: { category: true },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.movie.count({ where: whereClause }),
+      page === 1 && !query && !selectedCategory
+        ? prisma.movie.findFirst({ orderBy: { createdAt: "desc" } })
+        : null,
+      page === 1 && !query && !selectedCategory
+        ? prisma.movie.findMany({
+            orderBy: { views: "desc" },
+            take: 5,
+            include: { category: true },
+          })
+        : Promise.resolve([]),
+    ]);
+  } catch (err) {
+    console.error("Home page database error:", err);
+  }
 
   const totalPages = Math.ceil(totalMovies / pageSize);
 
