@@ -7,13 +7,17 @@ const extraOrigins = (process.env.SERVER_ACTIONS_ALLOWED_ORIGINS || "")
 const nextConfig = {
   allowedDevOrigins: ["192.168.56.1:3000", "localhost:3000"],
   serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg", "pg"],
-  serverActions: {
-    allowedOrigins: [
-      "localhost:3000",
-      "14kmovie.com",
-      "www.14kmovie.com",
-      ...extraOrigins,
-    ],
+  experimental: {
+    webpackMemoryOptimizations: true,
+    webpackBuildWorker: false,
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "14kmovie.com",
+        "www.14kmovie.com",
+        ...extraOrigins,
+      ],
+    },
   },
 };
 
