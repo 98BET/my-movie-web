@@ -72,7 +72,10 @@ export default async function Home({ searchParams }: PageProps) {
     }
   } catch (err) {
     console.error("Home page database error:", err);
-    loadError = "โหลดรายการหนังไม่สำเร็จ กรุณารีเฟรชอีกครั้ง";
+    const code = err && typeof err === "object" && "code" in err ? String(err.code) : "";
+    loadError = code
+      ? `โหลดรายการหนังไม่สำเร็จ (${code})`
+      : "โหลดรายการหนังไม่สำเร็จ กรุณารีเฟรชอีกครั้ง";
   }
 
   const totalPages = Math.ceil(totalMovies / pageSize);
