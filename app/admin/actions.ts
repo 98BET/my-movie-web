@@ -3,6 +3,14 @@
 import prisma from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export async function ensureDefaultCategory() {
+  return prisma.category.upsert({
+    where: { slug: "general" },
+    update: {},
+    create: { name: "ทั่วไป", slug: "general" },
+  });
+}
+
 // ฟังก์ชันดึงข้อมูลหนังจาก TMDB API
 export async function fetchTmdbMovie(tmdbId: string) {
   const apiKey = process.env.TMDB_API_KEY;
@@ -40,7 +48,9 @@ export async function createMovie(formData: FormData) {
   const embedUrl = formData.get("embedUrl") as string;
   const rating = parseFloat(formData.get("rating") as string) || 0;
   const year = parseInt(formData.get("year") as string) || new Date().getFullYear();
-  const categoryId = formData.get("categoryId") as string;
+  const fallbackCategory = await ensureDefaultCategory();
+  const categoryId =
+    (formData.get("categoryId") as string) || fallbackCategory.id;
 
   // สร้าง Slug ที่ไม่ซ้ำกัน
   const cleanTitle = title.toLowerCase().replace(/[^a-z0-9ก-ฮ]/g, "-").replace(/-+/g, "-") || "movie";

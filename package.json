@@ -10,7 +10,8 @@
     "build": "next build --webpack",
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "import:library": "node scripts/import-library.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

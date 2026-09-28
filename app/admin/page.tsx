@@ -6,7 +6,8 @@ import {
   deleteMovie, 
   createAd, 
   toggleAd, 
-  deleteAd 
+  deleteAd,
+  ensureDefaultCategory,
 } from "./actions";
 import TmdbFetcher from "./TmdbFetcher";
 
@@ -30,6 +31,7 @@ export default async function AdminDashboard({ searchParams }: PageProps) {
   let ads: any[] = [];
 
   try {
+    await ensureDefaultCategory();
     categories = await prisma.category.findMany();
   } catch (err) {
     console.warn("⚠️ ดึงหมวดหมู่ไม่สำเร็จ:", err);
