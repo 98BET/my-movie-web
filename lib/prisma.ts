@@ -1,10 +1,27 @@
 import dns from "node:dns";
-import net from "node:net";
+import { execSync } from "node:child_process";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 dns.setDefaultResultOrder("ipv4first");
+
+function resolveIPv4(hostname: string) {
+  try {
+    const out = execSync(`getent ahostsv4 ${hostname}`, {
+      encoding: "utf8",
+      timeout: 5000,
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    const match = out.match(/\b(\d{1,3}(?:\.\d{1,3}){3})\b/);
+    if (match) {
+      return match[1];
+    }
+  } catch {
+    // Windows/dev or getent missing — fall back to hostname
+  }
+  return hostname;
+}
 
 function databaseConfig() {
   const url = process.env.DATABASE_URL;
@@ -18,7 +35,8 @@ function databaseConfig() {
   );
 
   return {
-    host: parsed.hostname,
+    hostname: parsed.hostname,
+    host: resolveIPv4(parsed.hostname),
     port: Number(parsed.port || 5432),
     user: decodeURIComponent(parsed.username),
     password: decodeURIComponent(parsed.password),
@@ -42,16 +60,13 @@ const pool =
     password: cfg.password,
     database: cfg.database,
     max: 2,
-    connectionTimeoutMillis: 60000,
+    connectionTimeoutMillis: 20000,
     idleTimeoutMillis: 30000,
     keepAlive: true,
-    ssl: { rejectUnauthorized: false },
-    stream: () =>
-      net.connect({
-        host: cfg.host,
-        port: cfg.port,
-        family: 4,
-      }),
+    ssl: {
+      rejectUnauthorized: false,
+      servername: cfg.hostname,
+    },
   });
 
 const adapter = new PrismaPg(pool);
