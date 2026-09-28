@@ -21,6 +21,14 @@ function connectionString() {
   }
 }
 
+function lookupIPv4(
+  hostname: string,
+  options: dns.LookupOneOptions,
+  callback: Parameters<typeof dns.lookup>[2],
+) {
+  dns.lookup(hostname, { ...options, family: 4, all: false }, callback);
+}
+
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
   pgPool?: Pool;
@@ -30,9 +38,12 @@ const pool =
   globalForPrisma.pgPool ??
   new Pool({
     connectionString: connectionString(),
-    max: 5,
-    connectionTimeoutMillis: 15000,
+    max: 2,
+    connectionTimeoutMillis: 60000,
+    idleTimeoutMillis: 30000,
+    keepAlive: true,
     ssl: { rejectUnauthorized: false },
+    lookup: lookupIPv4,
   });
 
 const adapter = new PrismaPg(pool);
