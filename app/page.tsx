@@ -2,7 +2,8 @@ import prisma from "../lib/prisma";
 import MovieCard from "../components/MovieCard";
 import Link from "next/link";
 
-export const revalidate = 60; // ISR แคช 60 วินาที
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface PageProps {
   searchParams: Promise<{ q?: string; page?: string; category?: string }>;
