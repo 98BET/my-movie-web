@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "steps": {
+    "install": {
+      "commands": [
+        "npm ci --omit=dev --maxsockets=1 --no-audit --no-fund"
+      ]
+    },
+    "build": {
+      "commands": [
+        "node --max-old-space-size=384 ./node_modules/next/dist/bin/next build --webpack"
+      ]
+    }
+  },
+  "deploy": {
+    "startCommand": "npm run start"
+  }
+}
