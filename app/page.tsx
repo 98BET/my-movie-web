@@ -49,30 +49,24 @@ export default async function Home({ searchParams }: PageProps) {
   let heroMovie: Movie | null = null;
   let popularMovies: Movie[] = [];
 
-  try {
-    [categories, movies, totalMovies, heroMovie, popularMovies] = await Promise.all([
-      prisma.category.findMany(),
-      prisma.movie.findMany({
-        where: whereClause,
-        include: { category: true },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.movie.count({ where: whereClause }),
-      page === 1 && !query && !selectedCategory
-        ? prisma.movie.findFirst({ orderBy: { createdAt: "desc" } })
-        : null,
-      page === 1 && !query && !selectedCategory
-        ? prisma.movie.findMany({
-            orderBy: { views: "desc" },
-            take: 5,
-            include: { category: true },
-          })
-        : Promise.resolve([]),
-    ]);
-  } catch (err) {
-    console.error("Home page database error:", err);
+  categories = await prisma.category.findMany();
+  movies = await prisma.movie.findMany({
+    where: whereClause,
+    include: { category: true },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+  totalMovies = await prisma.movie.count({ where: whereClause });
+  if (page === 1 && !query && !selectedCategory) {
+    heroMovie = await prisma.movie.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
+    popularMovies = await prisma.movie.findMany({
+      orderBy: { views: "desc" },
+      take: 5,
+      include: { category: true },
+    });
   }
 
   const totalPages = Math.ceil(totalMovies / pageSize);
