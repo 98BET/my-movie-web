@@ -48,25 +48,31 @@ export default async function Home({ searchParams }: PageProps) {
   let totalMovies = 0;
   let heroMovie: Movie | null = null;
   let popularMovies: Movie[] = [];
+  let loadError = "";
 
-  categories = await prisma.category.findMany();
-  movies = await prisma.movie.findMany({
-    where: whereClause,
-    include: { category: true },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    orderBy: { createdAt: "desc" },
-  });
-  totalMovies = await prisma.movie.count({ where: whereClause });
-  if (page === 1 && !query && !selectedCategory) {
-    heroMovie = await prisma.movie.findFirst({
+  try {
+    categories = await prisma.category.findMany();
+    movies = await prisma.movie.findMany({
+      where: whereClause,
+      include: { category: true },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { createdAt: "desc" },
     });
-    popularMovies = await prisma.movie.findMany({
-      orderBy: { views: "desc" },
-      take: 5,
-      include: { category: true },
-    });
+    totalMovies = await prisma.movie.count({ where: whereClause });
+    if (page === 1 && !query && !selectedCategory) {
+      heroMovie = await prisma.movie.findFirst({
+        orderBy: { createdAt: "desc" },
+      });
+      popularMovies = await prisma.movie.findMany({
+        orderBy: { views: "desc" },
+        take: 5,
+        include: { category: true },
+      });
+    }
+  } catch (err) {
+    console.error("Home page database error:", err);
+    loadError = "โหลดรายการหนังไม่สำเร็จ กรุณารีเฟรชอีกครั้ง";
   }
 
   const totalPages = Math.ceil(totalMovies / pageSize);
@@ -162,7 +168,7 @@ export default async function Home({ searchParams }: PageProps) {
                 {query ? `ผลการค้นหา: "${query}"` : selectedCategory ? "ภาพยนตร์ตามหมวดหมู่" : "ภาพยนตร์มาใหม่"}
               </h2>
               <span className="text-xs md:text-sm text-gray-400">
-                พบทั้งหมด {totalMovies} เรื่อง
+                {loadError || `พบทั้งหมด ${totalMovies} เรื่อง`}
               </span>
             </div>
 
