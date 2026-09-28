@@ -1,25 +1,32 @@
 import dns from "node:dns";
+import net from "node:net";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 dns.setDefaultResultOrder("ipv4first");
 
-function connectionString() {
+function databaseConfig() {
   const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error("DATABASE_URL is not set");
   }
 
-  try {
-    const parsed = new URL(url);
-    parsed.searchParams.delete("channel_binding");
-    parsed.searchParams.set("sslmode", "require");
-    return parsed.toString();
-  } catch {
-    return url;
-  }
+  const parsed = new URL(url);
+  const database = decodeURIComponent(
+    parsed.pathname.replace(/^\//, "").split("/")[0] || "neondb",
+  );
+
+  return {
+    host: parsed.hostname,
+    port: Number(parsed.port || 5432),
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    database,
+  };
 }
+
+const cfg = databaseConfig();
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
@@ -29,12 +36,22 @@ const globalForPrisma = globalThis as unknown as {
 const pool =
   globalForPrisma.pgPool ??
   new Pool({
-    connectionString: connectionString(),
+    host: cfg.host,
+    port: cfg.port,
+    user: cfg.user,
+    password: cfg.password,
+    database: cfg.database,
     max: 2,
     connectionTimeoutMillis: 60000,
     idleTimeoutMillis: 30000,
     keepAlive: true,
     ssl: { rejectUnauthorized: false },
+    stream: () =>
+      net.connect({
+        host: cfg.host,
+        port: cfg.port,
+        family: 4,
+      }),
   });
 
 const adapter = new PrismaPg(pool);
