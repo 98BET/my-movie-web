@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://yourdomain.com'; // เปลี่ยนเป็นโดเมนจริงในอนาคต
+  const baseUrl = 'https://14kmovie.com';
 
   return {
     rules: {

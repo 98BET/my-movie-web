@@ -15,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   const movieUrls = movies.map((movie: { slug: string; updatedAt: Date }) => ({
-    url: `${baseUrl}/movie/${movie.slug}`,
+    url: `${baseUrl}/movie/${encodeURIComponent(movie.slug)}`,
     lastModified: movie.updatedAt || new Date(),
   }));
 
