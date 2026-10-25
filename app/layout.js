@@ -77,6 +77,12 @@ export default function RootLayout({ children }) {
                 © {year} 14kmovie — ดูหนังออนไลน์ฟรี
               </p>
             </div>
+            <Link
+              href="/contact"
+              className="text-sm font-semibold text-yellow-400 hover:text-yellow-300 transition-colors"
+            >
+              ติดต่อลงโฆษณา
+            </Link>
           </div>
         </footer>
       </body>

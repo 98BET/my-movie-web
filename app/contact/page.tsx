@@ -19,10 +19,15 @@ export default function ContactPage() {
             <span>💬</span> ช่องทางติดต่อด่วน
           </h2>
           <div className="space-y-3 text-sm text-gray-300">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800">
+            <a
+              href="https://t.me/contact14k"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800 hover:border-yellow-500/60 transition-colors"
+            >
               <span className="text-gray-400">Telegram / Direct:</span>
-              <span className="font-semibold text-white">@14kmovie_ads</span>
-            </div>
+              <span className="font-semibold text-yellow-400">@contact14k</span>
+            </a>
             <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800">
               <span className="text-gray-400">Email สนับสนุน:</span>
               <span className="font-semibold text-white">ads@14kmovie.com</span>
