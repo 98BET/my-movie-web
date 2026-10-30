@@ -28,10 +28,13 @@ export default function ContactPage() {
               <span className="text-gray-400">Telegram / Direct:</span>
               <span className="font-semibold text-yellow-400">@contact14k</span>
             </a>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800">
+            <a
+              href="mailto:hydraxyedyub@gmail.com"
+              className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800 hover:border-yellow-500/60 transition-colors"
+            >
               <span className="text-gray-400">Email สนับสนุน:</span>
-              <span className="font-semibold text-white">ads@14kmovie.com</span>
-            </div>
+              <span className="font-semibold text-yellow-400">hydraxyedyub@gmail.com</span>
+            </a>
           </div>
         </div>
 
