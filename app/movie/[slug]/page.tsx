@@ -143,24 +143,18 @@ export default async function MovieWatchPage({ params }: PageProps) {
 
         {/* รายละเอียดหนัง */}
         <div className="bg-neutral-900/90 p-6 md:p-8 rounded-2xl border border-neutral-800/80 space-y-4 shadow-xl backdrop-blur-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-wide">{movie.title}</h1>
-              {movie.year && (
-                <span className="px-3 py-1 rounded-lg text-xs font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/25">
-                  {movie.year}
-                </span>
-              )}
-              {movie.category?.name && (
-                <span className="px-3 py-1 rounded-lg text-xs font-bold bg-neutral-800 text-gray-300 border border-neutral-700">
-                  {movie.category.name}
-                </span>
-              )}
-            </div>
-            {/* แสดงยอดวิว */}
-            <div className="text-xs font-medium text-gray-400 bg-neutral-800/60 px-3 py-1.5 rounded-xl border border-neutral-700/50">
-              👁️ เข้าชม {movie.views?.toLocaleString() || 0} ครั้ง
-            </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-wide">{movie.title}</h1>
+            {movie.year && (
+              <span className="px-3 py-1 rounded-lg text-xs font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/25">
+                {movie.year}
+              </span>
+            )}
+            {movie.category?.name && (
+              <span className="px-3 py-1 rounded-lg text-xs font-bold bg-neutral-800 text-gray-300 border border-neutral-700">
+                {movie.category.name}
+              </span>
+            )}
           </div>
 
           <p className="text-gray-300 leading-relaxed text-sm md:text-base">
