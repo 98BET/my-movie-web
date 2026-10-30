@@ -6,9 +6,7 @@ interface Movie {
   slug: string;
   posterUrl?: string | null;
   title: string;
-  rating?: number | null;
   year?: number | null;
-  views?: number; // เพิ่มฟิลด์รองรับยอดวิว
   category?: {
     name: string;
   } | null;
@@ -50,18 +48,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
             </span>
           </div>
         )}
-
-        {/* 🔥 ป้ายกำกับยอดวิว (มุมซ้ายบน) */}
-        {typeof movie.views === "number" && movie.views > 0 && (
-          <div className="absolute top-2.5 left-2.5 bg-black/80 backdrop-blur-md text-yellow-400 text-xs font-bold px-2 py-1 rounded-lg border border-yellow-500/30 shadow-lg flex items-center gap-1 z-10">
-            👁️ {movie.views.toLocaleString()}
-          </div>
-        )}
-
-        {/* ป้ายเรตติ้ง (มุมขวาบน) */}
-        <div className="absolute top-2.5 right-2.5 bg-black/80 backdrop-blur-md text-yellow-400 text-xs font-bold px-2 py-1 rounded-lg border border-yellow-500/30 shadow-lg z-10">
-          ★ {movie.rating || 0}
-        </div>
       </div>
 
       <div className="p-3.5 space-y-1.5">
